@@ -4,6 +4,6 @@ import com.aditya.model.TwoFactorOTP;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TwoFactorOtpRepository extends JpaRepository<TwoFactorOTP, String> {
-    TwoFactorOTP findByUserID(Long userID);
+    TwoFactorOTP findByUserId(Long userId);
 }
 

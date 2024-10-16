@@ -30,7 +30,7 @@ public class TwoFactorOtpServiceImpl implements TwoFactorOtpService{
 
     @Override
     public TwoFactorOTP findByUser(Long userId) {
-        return twoFactorOtpRepository.findByUserID(userId);
+        return twoFactorOtpRepository.findByUserId(userId);
     }
 
     @Override
