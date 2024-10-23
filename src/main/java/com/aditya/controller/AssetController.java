@@ -14,7 +14,7 @@ import java.util.List;
 @RequestMapping("/api/asset")
 public class AssetController {
     @Autowired
-    private final AssetService assetService;
+    private AssetService assetService;
     @Autowired
     private UserService userService;
 

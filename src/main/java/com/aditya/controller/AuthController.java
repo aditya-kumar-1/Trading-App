@@ -8,6 +8,7 @@ import com.aditya.response.AuthResponse;
 import com.aditya.service.CustomUserDetailsService;
 import com.aditya.service.EmailService;
 import com.aditya.service.TwoFactorOtpService;
+import com.aditya.service.WatchListService;
 import com.aditya.utils.OtpUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +29,8 @@ public class AuthController {
     @Autowired
     private TwoFactorOtpService twoFactorOtpService;
     @Autowired
+    private WatchListService watchListService;
+    @Autowired
     private CustomUserDetailsService customUserDetailsService;
     @Autowired
     private EmailService emailService;
@@ -43,7 +46,7 @@ public class AuthController {
         newUser.setPassword(user.getPassword());
         newUser.setFullName(user.getFullName());
         User savedUser = userRepository.save(newUser);
-
+        watchListService.createWatchList(savedUser);
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 user.getEmail(),
                 user.getPassword()

@@ -5,7 +5,6 @@ import com.aditya.domain.OrderType;
 import com.aditya.model.*;
 import com.aditya.repository.OrderItemRepository;
 import com.aditya.repository.OrderRepository;
-import jakarta.persistence.Entity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -48,7 +47,7 @@ public class OrderServiceImpl implements OrderService{
 
     @Override
     public List<Order> getAllOrdersOfUser(Long userId, OrderType orderType, String assetSymbol) {
-       return orderRepository.findByOrderId(userId);
+       return orderRepository.findByUserId(userId);
 
 
     }
@@ -69,7 +68,7 @@ public class OrderServiceImpl implements OrderService{
         return orderItemRepository.save(orderItem);
     }
     @Transactional
-    public Order buyAssests(Coin coin,double quantity, OrderType orderType, User user) throws Exception {
+    public Order buyAssests(Coin coin, double quantity, OrderType orderType, User user) throws Exception {
         if(quantity<=0)
         {
             throw new Exception("Quantity should be > 0");
@@ -101,7 +100,7 @@ public class OrderServiceImpl implements OrderService{
 
     }
     @Transactional
-    public Order sellAssests(Coin coin,double quantity, OrderType orderType, User user) throws Exception {
+    public Order sellAssests(Coin coin, double quantity, OrderType orderType, User user) throws Exception {
         if(quantity<=0)
         {
             throw new Exception("Quantity should be > 0");

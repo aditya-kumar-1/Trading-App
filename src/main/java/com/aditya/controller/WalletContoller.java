@@ -1,11 +1,9 @@
 package com.aditya.controller;
 
 
-import com.aditya.model.Order;
-import com.aditya.model.User;
-import com.aditya.model.Wallet;
-import com.aditya.model.WalletTransaction;
+import com.aditya.model.*;
 import com.aditya.service.OrderService;
+import com.aditya.service.PaymentService;
 import com.aditya.service.UserService;
 import com.aditya.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
-@RequestMapping("/api/wallet")
 public class WalletContoller {
     @Autowired
     private WalletService walleteService;
@@ -24,6 +23,8 @@ public class WalletContoller {
 
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private PaymentService paymentService;
     @GetMapping("/api/wallet")
     public ResponseEntity<?> getUserWallet(@RequestHeader("Authorization")String jwt) throws Exception {
         User user=userService.findUserByJwtToken(jwt);
@@ -56,6 +57,28 @@ public class WalletContoller {
         Order order =orderService.getOrderById(orderId);
         Wallet wallet =walleteService.payOrderPayment(order,user);
 
+
+        return new ResponseEntity<>(wallet,HttpStatus.OK);
+
+    }
+    @PutMapping("/api/wallet/deposite")
+    public ResponseEntity<Wallet> addBalanceToWallet(@RequestHeader("Authorization")String jwt,
+                                                  @RequestParam(name="order_id") Long orderId,
+                                                  @RequestParam(name="payment_id") String paymentId
+    ) throws Exception {
+        User user =userService.findUserByJwtToken(jwt);
+
+        Wallet wallet =walleteService.getUserWallet(user);
+        PaymentOrder order = paymentService.getPaymentOrderById(orderId);
+        Boolean status=paymentService.ProccedPaymentOrder(order,paymentId);
+        if(wallet.getBalance()==null)
+        {
+            wallet.setBalance(BigDecimal.valueOf(0));
+        }
+        if(status){
+            wallet=walleteService.addBalanceToWallet(wallet,order.getAmount());
+
+        }
 
         return new ResponseEntity<>(wallet,HttpStatus.OK);
 
